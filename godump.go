@@ -28,25 +28,28 @@ func main() {
 		err := filepath.Walk(paths[path], func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
-			}
+			}			
 
 			if strings.HasSuffix(info.Name(), ".csproj") {
-				if val, inmap := projMap[path];  inmap {
+				dir := filepath.Dir(path)
+				if val, inmap := projMap[dir];  inmap {
 					val.projName = info.Name()					
 				} else {
-					projMap[path] = project { projName: info.Name() }					
+					projMap[dir] = project { projName: info.Name() }					
 				}				
 			} else if strings.ToLower(info.Name()) == "package.json" {
-				if val, inmap := projMap[path];  inmap {
+				dir := filepath.Dir(path)
+				if val, inmap := projMap[dir];  inmap {
 					val.npms = info.Name()				
 				} else {
-					projMap[path] = project { npms: info.Name() }										
+					projMap[dir] = project { npms: info.Name() }										
 				}				
 			} else if strings.ToLower(info.Name()) == "packages.config" {
-				if val, inmap := projMap[path];  inmap {
+				dir := filepath.Dir(path)
+				if val, inmap := projMap[dir];  inmap {
 					val.nugets = info.Name()				
 				} else {
-					projMap[path] = project { nugets: info.Name() }										
+					projMap[dir] = project { nugets: info.Name() }										
 				}				
 			}
 
